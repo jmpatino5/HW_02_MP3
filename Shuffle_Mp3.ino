@@ -52,23 +52,25 @@ void SeeknPlay() 										//Método principal que permite buscar, validar y rep
 	while(!encontrado)
 	{
 		randomSeed(millis());                            //inicializa el generador de números aleatorios con la funcion millis para que sea siempre diferente en cada corrida
-		uint8_t track_n = (random(c_min,c_max+1));				 //Selecciona el número aleatorio entre el rango máximo de canciones
+		track_n = (random(c_min,c_max+1));				 //Selecciona el número aleatorio entre el rango máximo de canciones
 	    while (track_n == track_l)						 //Mientras que el número de canción sea igual que el anterior selecciona otro
 	    { 
-	      	uint8_t track_n = (random(c_min, c_max + 0.99));
+	      	int track_n = (random(c_min, c_max + 0.99));
 
 	    }
 	    MP3player.playTrack(track_n);					 //Inicia la controlducción de la canción que seleccionó para obtener el dato del artista
-		if(MP3player.playTrack(track_n) != 0) //Prueba de error!!
+		/*if(MP3player.playTrack(track_n) != 0) //Prueba de error!!
 		{
 			uint8_t error1 = MP3player.playTrack(track_n); //Acá estoy guardando el número de error que me saca al tratar de inicializar
 			Serial.print(error1);				         //El error que saca es el 6 que dice "6 Patch was not loaded successfully. This may result in playTrack errors"
-		}
-		char memory[16];								 //Separa un espacio de memoria de 16 bits para el artista
-		MP3player.trackArtist(memory);					 //Almacena el artista en el espacio de memoria
+		}*/
+		char buffer[30];							 //Separa un espacio de memoria de 16 bits para el artista
+		MP3player.trackArtist((char*)&buffer);					 //Almacena el artista en el espacio de memoria
 		MP3player.stopTrack();							 
-		if(String(memory) == inp)						 //Convierte lo que haya en la memoria a un string, y lo compara con el artista seleccionado
+		//Serial.print(String(buffer));
+		if(String(buffer) == inp)						 //Convierte lo que haya en la memoria a un string, y lo compara con el artista seleccionado
 		{
+			Serial.print("t");
 			encontrado = true;						     //Si el artista que obtuvo es el mismo que el seleccionado entonces guarda el status
 		}
 	}
@@ -80,10 +82,10 @@ void SeeknPlay() 										//Método principal que permite buscar, validar y rep
 		Serial.print("\nTrack ");						 							
 		Serial.print(track_n);							 //Muestra el número de la pista que está controlduciendo
 		track_l = track_n;								 //Iguala las dos canciones para poder luego comparar para no repetirlas		
-		char memory[16];
-		MP3player.trackTitle(memory);					 //Obtiene el título de la canción y lo almacena en la memoria
+		char buffer[16];
+		MP3player.trackTitle(buffer);					 //Obtiene el título de la canción y lo almacena en la memoria
 		Serial.print(" - ");					
-		Serial.println(memory);
+		Serial.println(buffer);
 		Serial.println("\nEscriba 'menu' para acceder a las opciones de control de reproducción)");
 
 
